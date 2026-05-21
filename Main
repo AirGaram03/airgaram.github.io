@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad Ihsan Dewanto — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181c;
+    --border: #2a2d35;
+    --accent: #4f8ef7;
+    --accent2: #7ee8a2;
+    --text: #e8eaf0;
+    --muted: #7a7f8e;
+    --card: #1c1f26;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 4rem;
+    background: rgba(14,15,17,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+    top: 10%; left: 5%;
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(126,232,162,0.08) 0%, transparent 70%);
+    bottom: 10%; right: 10%;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 900px;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+
+  .hero-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 1.05;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 580px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.35s;
+  }
+
+  .hero-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.5rem 1.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    margin-right: 0.75rem;
+    margin-bottom: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.5s;
+  }
+
+  .hero-stat span { color: var(--muted); font-size: 11px; }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding: 0.875rem 2rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: opacity 0.2s, transform 0.2s;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.6s;
+  }
+
+  .hero-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 3rem;
+    line-height: 1.15;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+
+  .project-card:first-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .project-card:hover::before { opacity: 1; }
+
+  .project-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.75rem;
+  }
+
+  .project-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .metric {
+    background: rgba(79,142,247,0.08);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .stack-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.25rem 0.6rem;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .project-visual {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .visual-placeholder {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .visual-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* Animated circuit lines for visual */
+  .circuit {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+  }
+
+  /* EXPERIENCE */
+  .exp-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+  }
+
+  .exp-company {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+
+  .exp-role {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .exp-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .exp-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .skill-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+
+  .skill-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 1rem;
+  }
+
+  .skill-item {
+    font-size: 14px;
+    color: var(--muted);
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-item:last-child { border-bottom: none; }
+
+  /* CONTACT */
+  .contact-section {
+    text-align: center;
+    padding: 6rem 4rem;
+    position: relative;
+  }
+
+  .contact-glow {
+    position: absolute;
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(79,142,247,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .contact-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .contact-sub {
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .contact-btn.primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .contact-btn.secondary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .contact-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 4rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    section { padding: 4rem 1.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card:first-child { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .divider { margin: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">MID // PORTFOLIO</div>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#organization">Organization</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">// Robotics & AI Engineer · Fresh Graduate</div>
+    <h1 class="hero-name">Muhammad<br><em>Ihsan</em> Dewanto</h1>
+    <p class="hero-sub">I build systems where hardware and software meet — from sensor-instrumented gloves to autonomous robots. Based in Surabaya, Indonesia.</p>
+    <div>
+      <div class="hero-stat">10× accuracy <span>vs conventional gripper</span></div>
+      <div class="hero-stat">0.32° <span>mean error</span></div>
+      <div class="hero-stat">6 months <span>R&D at BRIN</span></div>
+    </div>
+    <a href="#contact" class="hero-cta">Get in touch →</a>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label fade-in">// 01 — Selected Work</div>
+  <h2 class="section-title fade-in">Key Projects</h2>
+
+  <div class="projects-grid">
+
+    <!-- THESIS — FEATURED -->
+    <div class="project-card fade-in">
+      <div>
+        <div class="project-tag">Undergraduate Thesis · 2025</div>
+        <h3 class="project-title">Wearable Glove Controller for Soft Gripper</h3>
+        <p class="project-desc">Built a sensor-instrumented glove that maps finger bend angles to gripper position in real time. The fin-ray soft gripper adapts to spherical and cylindrical objects (40–60 mm) without causing surface damage — outperforming conventional rigid grippers in both accuracy and grip safety.</p>
+        <div class="project-metrics">
+          <div class="metric">0.32° error vs 3.69°</div>
+          <div class="metric">2.64–2.79 N grip force</div>
+          <div class="metric">1.28s settling time</div>
+          <div class="metric">Zero deformation on all test objects</div>
+        </div>
+        <div class="stack">
+          <span class="stack-item">Flex Sensor</span>
+          <span class="stack-item">Force Sensor</span>
+          <span class="stack-item">Embedded C</span>
+          <span class="stack-item">Arduino</span>
+          <span class="stack-item">SolidWorks</span>
+          <span class="stack-item">Flexible Polymer</span>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg class="circuit" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 110 H80 V60 H140 V160 H200 V110 H280" stroke="#4f8ef7" stroke-width="1.5" stroke-dasharray="4 4">
+            <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="1s" repeatCount="indefinite"/>
+          </path>
+          <path d="M60 160 V200 H180 V170" stroke="#7ee8a2" stroke-width="1" stroke-dasharray="3 3">
+            <animate attributeName="stroke-dashoffset" from="0" to="12" dur="1.5s" repeatCount="indefinite"/>
+          </path>
+          <circle cx="80" cy="60" r="4" fill="#4f8ef7" opacity="0.8"/>
+          <circle cx="140" cy="110" r="4" fill="#7ee8a2" opacity="0.8"/>
+          <circle cx="200" cy="110" r="4" fill="#4f8ef7" opacity="0.8"/>
+          <rect x="120" y="85" width="40" height="25" rx="3" stroke="#4f8ef7" stroke-width="1" fill="none"/>
+          <text x="140" y="102" fill="#4f8ef7" font-size="8" text-anchor="middle" font-family="monospace">MCU</text>
+        </svg>
+        <div class="visual-placeholder">
+          <span class="visual-icon">🤖</span>
+          <div>Add project photo here</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRIN -->
+    <div class="project-card fade-in">
+      <div class="project-tag">BRIN Internship · 2024–2025</div>
+      <h3 class="project-title">Pneumatic Soft Gripper for Agricultural Robotics</h3>
+      <p class="project-desc">Designed and assembled a pneumatic fin-ray gripper for fruit-picking at Indonesia's national R&D agency. Covered material selection, CAD design, mechanical assembly, and flex sensor mounting. Conducted grip testing and identified friction characteristics of the polymer material.</p>
+      <div class="stack">
+        <span class="stack-item">SolidWorks</span>
+        <span class="stack-item">Flex Sensor</span>
+        <span class="stack-item">Embedded C</span>
+        <span class="stack-item">Arduino</span>
+        <span class="stack-item">Pneumatics</span>
+      </div>
+    </div>
+
+    <!-- WALL ROBOT -->
+    <div class="project-card fade-in">
+      <div class="project-tag">Universitas Airlangga · 2023</div>
+      <h3 class="project-title">Autonomous Wall-Following Robot</h3>
+      <p class="project-desc">Implemented ultrasonic sensor fusion and PID control for consistent wall-distance tracking at variable speeds.</p>
+      <div class="stack">
+        <span class="stack-item">C/C++</span>
+        <span class="stack-item">Arduino</span>
+        <span class="stack-item">Ultrasonic Sensor</span>
+        <span class="stack-item">PID Control</span>
+      </div>
+    </div>
+
+    <!-- FORKLIFT ROBOT -->
+    <div class="project-card fade-in">
+      <div class="project-tag">Universitas Airlangga · 2024</div>
+      <h3 class="project-title">Line-Following Forklift Robot</h3>
+      <p class="project-desc">Built a sensor-driven forklift that follows a predefined floor path and executes a lift sequence — integrating IR sensors, motor drivers, and a lift mechanism into a single embedded system.</p>
+      <div class="stack">
+        <span class="stack-item">C/C++</span>
+        <span class="stack-item">Arduino</span>
+        <span class="stack-item">IR Sensors</span>
+        <span class="stack-item">Motor Driver</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label fade-in">// 02 — Work History</div>
+  <h2 class="section-title fade-in">Experience</h2>
+
+  <div class="exp-card fade-in">
+    <div>
+      <div class="exp-company">Badan Riset dan Inovasi Nasional (BRIN)</div>
+      <div class="exp-role">Research Intern — Mechatronics Division</div>
+      <p class="exp-desc">Solely responsible for hardware design and sensor integration on a live agricultural robotics project at one of Indonesia's premier government R&D centres. Designed and assembled a pneumatic soft gripper, conducted grip testing, and produced a formal technical report submitted as the official record of the internship research activity.</p>
+    </div>
+    <div class="exp-date">Aug 2024 – Jan 2025<br><span style="color:var(--accent2)">Bandung</span></div>
+  </div>
+
+  <div class="exp-card fade-in">
+    <div>
+      <div class="exp-company">Universitas Airlangga</div>
+      <div class="exp-role">B.Eng. Robotics Engineering & Artificial Intelligence</div>
+      <p class="exp-desc">GPA 3.39 / 4.00 · TOEFL 580 · Relevant: Embedded Systems, Control Systems, Industrial Automation, Machine Learning, AI, Robotic Experiments</p>
+    </div>
+    <div class="exp-date">2021 – 2025<br><span style="color:var(--accent2)">Surabaya</span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ORGANIZATION -->
+<section id="organization">
+  <div class="section-label fade-in">// 03 — Organization</div>
+  <h2 class="section-title fade-in">Organization</h2>
+
+  <div class="exp-card fade-in">
+    <div>
+      <div class="exp-company">Airlangga Chess Team (UKM Catur)</div>
+      <div class="exp-role">Staff — Human Resource Division</div>
+      <p class="exp-desc">Managed end-to-end publication and documentation for two consecutive Airlangga Chess Tournaments (2022 & 2023). Owned cadre development programmes for incoming members and handled human resource initiatives to improve team capabilities and retention.</p>
+    </div>
+    <div class="exp-date">Jul 2021 – Dec 2023<br><span style="color:var(--accent2)">Surabaya</span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label fade-in">// 04 — Capabilities</div>
+  <h2 class="section-title fade-in">Skills</h2>
+
+  <div class="skills-grid">
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">Programming</div>
+      <div class="skill-item">C / C++</div>
+      <div class="skill-item">Python</div>
+      <div class="skill-item">MATLAB (basic)</div>
+      <div class="skill-item">Embedded C</div>
+    </div>
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">Embedded & Hardware</div>
+      <div class="skill-item">Arduino</div>
+      <div class="skill-item">Sensor Integration</div>
+      <div class="skill-item">Electrical Circuit Design</div>
+      <div class="skill-item">Signal Conditioning</div>
+    </div>
+    <div class="skill-group fade-in">
+      <div class="skill-group-title">Design & Tools</div>
+      <div class="skill-item">SolidWorks / CAD</div>
+      <div class="skill-item">Fritzing</div>
+      <div class="skill-item">Git</div>
+      <div class="skill-item">Technical Documentation</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <div class="contact-glow"></div>
+  <div class="section-label" style="display:inline-block;margin-bottom:1rem">// 05 — Let's Talk</div>
+  <h2 class="contact-title">Open to <em style="font-family:'DM Serif Display',serif;font-style:italic;color:var(--accent)">opportunities</em></h2>
+  <p class="contact-sub">Seeking entry-level roles in electrical, embedded, or software engineering. Available immediately.</p>
+  <div class="contact-links">
+    <a href="mailto:m.ihsan.dewanto@gmail.com" class="contact-btn primary">✉ m.ihsan.dewanto@gmail.com</a>
+    <a href="https://linkedin.com/in/ihsandewanto" target="_blank" class="contact-btn secondary">↗ LinkedIn</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>Muhammad Ihsan Dewanto</span>
+  <span>Surabaya, Indonesia · 2025</span>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
